@@ -60,7 +60,7 @@ paginationLinks();
 // Tip: If you created a function above to show/hide list items, it could be helpful here
 for (var i = 0; i < pgContainer.length; i++) {
   pgContainer[i].addEventListener("click", function (event) {
-
-    console.log(event.target);
+    showStudents(event.target.innerHTML);
+    console.log(event.target.innerHTML);
   });
 }
