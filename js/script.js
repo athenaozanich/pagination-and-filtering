@@ -63,18 +63,12 @@ FSJS project 2 - List Filter and Pagination
       // Tip: If you created a function above to show/hide list items, it could be helpful here
 
       for (var i = 0; i < pgContainer.length; i++) {
-        let curPage;
-        let prevPage;
-        console.log(prevPage);
         pgContainer[i].addEventListener("click", function (event) {
-          if (prevPage === curPage) {
 
-          }
-          curPage = event.target;
-          curPage.classList.add('active');
-          showStudents(curPage.innerHTML);
+          pgContainer.forEach(pgLink => pgLink.removeAttribute('class'));
+          event.target.classList.add('active');
+          showStudents(event.target.innerHTML);
         });
-        prevPage = curPage;
       }
       showStudents();
   }
