@@ -50,7 +50,7 @@ FSJS project 2 - List Filter and Pagination
          }
 
        }
-       paginationLinks(results);
+       //paginationLinks(results);
   });
 
 
@@ -59,15 +59,25 @@ FSJS project 2 - List Filter and Pagination
     if (!pgNum ) {
       pgNum = 1;
     }
-    console.log(pgNum);
-    let studentsPerPg = pgNum*10;
+    let studentsPerPg = 10;
+
 
     for (let i = 0; i < studentList.length; i++) {
+      console.log(studentList.length);
+      stdntCnt = 0;
+      let pages = [];
+      if (i <= 10) {
+        
+      }
+      for (let idx = 0; idx <studentsPerPg; idx++) {
+        // const element = array[idx];
+        
+      }
       if (i <= studentsPerPg-11 || i >= studentsPerPg-1) {
           studentList[i].style.display = 'none';
       }else{
         studentList[i].style.display = 'block';
-        paginationBox[pgNum-1].classList.add('active');
+        //paginationBox[pgNum-1].classList.add('active');
         console.log(paginationBox[pgNum-1]);
       }
     }
@@ -76,22 +86,18 @@ FSJS project 2 - List Filter and Pagination
 
   // Create and append the pagination links - Creating a function that can do this is a good approach
   function paginationLinks(students){
-    let numOfStudents;
-    if (students === null) {
-      numOfStudents = 0;
-    }else if (studentList.length <= 0) {
+    if (students === null || 0) {
       console.log("Sorry there are no results");
     }else {
-      numOfStudents = students.length;
+      studentsPerPg = studentList.length/10;
+      numOfPgs = Math.ceil(studentsPerPg);
     }
-
+    console.log(numOfPgs);
+    
     listContainer.append(pageContainer);
     pageContainer.append(pagination);
     pageContainer.classList.add("pagination");
-    if (studentList.length >= numOfStudents) {
-      for (let i = 0; i < studentList.length; i++) {
-        if (i >= numOfStudents) {
-          numOfStudents = numOfStudents + 10;
+      for (let i = 0; i < numOfPgs; i++) {
           page++;
 
           let pgItem =  document.createElement("LI");
@@ -104,9 +110,6 @@ FSJS project 2 - List Filter and Pagination
 
         }
 
-      }
-
-    }
     paginationBox = document.querySelectorAll('.pagination a');
 
     showStudents(pageNum);
