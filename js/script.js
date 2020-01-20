@@ -23,7 +23,7 @@ let pagination =  document.createElement("UL");
 //initialize needed variables
 var paginationBox;
 let results = [];
-let pageNum;
+let pageNum = 1;
 
 //add elements to dom
 pgHeader.append(srchContainer);
@@ -37,60 +37,63 @@ pageContainer.append(pagination);
 pageContainer.classList.add("pagination");
 
 //pagination call on load
-paginationLinks();
+showStudents(studentList, pageNum);
 // Create a function to hide all of the items in the list excpet for the ten you want to show
 // Tip: Keep in mind that with a list of 54 studetns, the last page will only display four
 srch.addEventListener("keyup", function(e) {
-      let searchStr = e.target.value.toString().toLowerCase();
+  let searchStr = e.target.value.toString().toLowerCase();
 
-      for (let i = 0; i < studentList.length; i++) {
-        let studentName = studentNames[i].innerHTML;
+  for (let i = 0; i < studentList.length; i++) {
+    let studentName = studentNames[i].innerHTML;
 
-        if (studentName.indexOf(searchStr) > -1) {
-          studentList[i].style.display = 'block';
-          results.push(studentList[i]);
-        }else{
-          studentList[i].style.display = 'none';
-        }
+    if (studentName.indexOf(searchStr) > -1) {
+      results.push(studentList[i]);
+    }else{
+      studentList[i].style.display = 'none';
+    }
 
-      }
-      //paginationLinks(results);
+  }
+  showStudents(results, 1);
+  
 });
 
 /******************************************
-  Satisfied
+  Satisfied +
 ******************************************/
-function showStudents(pgNum){
-  if (!pgNum || pgNum == 0 ) {
-    pgNum = 1;
-    paginationBox[0].classList.add('active');
-  }
+function showStudents(students, pgNum){
+  
+  
   for (let i = 0; i < studentList.length; i++) {
       studentList[i].style.display = 'none';
-      if (pgNum == 1) {
-        for (let idx = 0; idx <= 9; idx++) {
-          studentList[idx].style.display = 'block';          
-        }
-      }else{
-        for (let index = 0; index <= 9 && i <= studentList.length; index++) {
-          studentList[(pgNum-1)*10+index].style.display = 'block';
-        }
-      }
   }
+
+  for (let index = 0; index <= 9; index++) {
+    if (students[(pgNum-1)*10+index]) {
+      students[(pgNum-1)*10+index].style.display = 'block';
+    }
+  }
+  paginationLinks(students, pgNum);
 }
 /******************************************
-  Satisfied
+  Satisfied +
 ******************************************/
 // Create and append the pagination links - Creating a function that can do this is a good approach
-function paginationLinks(students){
+function paginationLinks(students, currPage){
+  
   if (students === null || 0) {
     console.log("Sorry there are no results");
   }else {
-    studentsPerPg = studentList.length/10;
+    studentsPerPg = students.length/10;
     numOfPgs = Math.ceil(studentsPerPg);
+    
+    while (pagination.firstChild) {
+      pagination.removeChild(pagination.firstChild);
+    }
+    
   }
-  for (let i = 1; i <= numOfPgs; i++) {
-    let page = i;
+  
+  for (let idx = 1; idx <= numOfPgs; idx++) {
+    let page = idx;
 
     let pgItem =  document.createElement("LI");
     let pgLink =  document.createElement("A");
@@ -101,7 +104,7 @@ function paginationLinks(students){
     pgLink.append(pageNum);
   }
   paginationBox = document.querySelectorAll('.pagination a');
-  showStudents();
+  paginationBox[currPage-1].classList.add('active');
 }
 
     
@@ -113,7 +116,12 @@ pagination.addEventListener("click", function (event) {
     pageNum = event.target.text;
     paginationBox.forEach(pgLink => pgLink.removeAttribute('class'));
     event.target.classList.add('active');
-    showStudents(pageNum);
+    if (results.length == 0) {
+      showStudents(studentList, pageNum);
+    }else{
+      showStudents(results, pageNum);
+    } 
+    
   }
   
 });
