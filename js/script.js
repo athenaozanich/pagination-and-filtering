@@ -48,13 +48,11 @@ srch.addEventListener("keyup", function(e) {
 
     if (studentName.indexOf(searchStr) > -1) {
       results.push(studentList[i]);
-    }else{
-      studentList[i].style.display = 'none';
     }
 
   }
   showStudents(results, 1);
-  
+  results.length =0;
 });
 
 /******************************************
