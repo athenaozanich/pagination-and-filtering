@@ -21,7 +21,7 @@ srchContainer.append(btn);
 
 //initialize needed variables
 var paginationBox;
-let results = [];
+
 let pageNum = 1;
 
 //create and append pagination containers
@@ -42,17 +42,20 @@ paginationLinks(studentList, pageNum);
 srch.addEventListener("keyup", function(e) {
   const studentNames = document.querySelectorAll('.student-details h3');
   let searchStr = e.target.value.toString().toLowerCase();
-  
+  let results = [];
   for (let i = 0; i < studentList.length; i++) {
     studentList[i].style.display = 'none';
     let studentName = studentNames[i].innerHTML.toLowerCase();
     
     if (studentName.indexOf(searchStr) > -1) {
       results.push(studentList[i]);
-    }
+    } 
+  }
+  if (results.length == 0) {
+    console.log("Sorry there are no results");
   }
   paginationLinks(results, 1);
-  showStudents(results, 1);
+  
 });
 
 
@@ -60,13 +63,11 @@ srch.addEventListener("keyup", function(e) {
   Satisfied +++
 ******************************************/
 function showStudents(students, currPage){
-  
+  console.log(students.length);
   for (let i = 0; i < students.length; i++) {
-    
+    students[i].style.display = 'none';
     if (i >= (currPage*10)-10 && i < currPage*10 ) {
       students[i].style.display = 'block';
-    }else{
-      students[i].style.display = 'none';
     }
 
   }
@@ -82,9 +83,7 @@ function paginationLinks(students, currPage){
   while (pagination.firstChild) {
     pagination.removeChild(pagination.firstChild);
   }
-  if (students === null || 0) {
-    console.log("Sorry there are no results");
-  }else {
+  if (students) {
     studentsPerPg = students.length/10;
     numOfPgs = Math.ceil(studentsPerPg);
   }
@@ -113,12 +112,13 @@ function paginationLinks(students, currPage){
       paginationBox.forEach(pgLink => pgLink.removeAttribute('class'));
       event.target.classList.add('active');
       
-      showStudents(students, pageNum);
+      paginationLinks(students, pageNum);
       
       
     }
+  });  
     
-  });
+  
   paginationBox[currPage-1].classList.add('active');
   showStudents(students, currPage);
 }
@@ -127,5 +127,3 @@ function paginationLinks(students, currPage){
 /******************************************
   Unsatisfied 
 ******************************************/
-
-  
