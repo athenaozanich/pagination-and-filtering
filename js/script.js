@@ -40,31 +40,30 @@ paginationLinks(studentList, pageNum);
 // Create a function to hide all of the items in the list excpet for the ten you want to show
 // Tip: Keep in mind that with a list of 54 studetns, the last page will only display four
 srch.addEventListener("keyup", function(e) {
-
   const studentNames = document.querySelectorAll('.student-details h3');
   let searchStr = e.target.value.toString().toLowerCase();
-
+  
   for (let i = 0; i < studentList.length; i++) {
+    studentList[i].style.display = 'none';
     let studentName = studentNames[i].innerHTML.toLowerCase();
-
+    
     if (studentName.indexOf(searchStr) > -1) {
       results.push(studentList[i]);
     }
-
   }
+  paginationLinks(results, 1);
   showStudents(results, 1);
-  results.length =0;
 });
 
 
 /******************************************
   Satisfied +++
 ******************************************/
-function showStudents(students, pgNum){
+function showStudents(students, currPage){
   
   for (let i = 0; i < students.length; i++) {
     
-    if (i >= (pgNum*10)-10 && i < pgNum*10 ) {
+    if (i >= (currPage*10)-10 && i < currPage*10 ) {
       students[i].style.display = 'block';
     }else{
       students[i].style.display = 'none';
@@ -80,6 +79,9 @@ function showStudents(students, pgNum){
 // Create and append the pagination links - Creating a function that can do this is a good approach
 function paginationLinks(students, currPage){
   
+  while (pagination.firstChild) {
+    pagination.removeChild(pagination.firstChild);
+  }
   if (students === null || 0) {
     console.log("Sorry there are no results");
   }else {
@@ -89,45 +91,41 @@ function paginationLinks(students, currPage){
 
   if (!pgnWrpr.firstChild) {
     pgnWrpr.append(pagination);
-
-    while (pagination.firstChild) {
-      pagination.removeChild(pagination.firstChild);
-    }
-    for (let idx = 1; idx <= numOfPgs; idx++) {
-      let page = idx;
-  
+  }
+    for (let i = 1; i <= numOfPgs; i++) {
+        
       let pgItem =  document.createElement("LI");
       let pgLink =  document.createElement("A");
-      let pageNum = document.createTextNode(page);
+      let pageNum = document.createTextNode(i);
   
       pagination.append(pgItem);
       pgItem.append(pgLink);
       pgLink.append(pageNum);
     }
-  }
   
   paginationBox = document.querySelectorAll('.pagination a');
 
+  
+  pagination.addEventListener("click", function (event) {
+    
+    if (event.target.tagName == "A") {
+      pageNum = event.target.text;
+      paginationBox.forEach(pgLink => pgLink.removeAttribute('class'));
+      event.target.classList.add('active');
+      
+      showStudents(students, pageNum);
+      
+      
+    }
+    
+  });
   paginationBox[currPage-1].classList.add('active');
+  showStudents(students, currPage);
 }
 
     
 /******************************************
   Unsatisfied 
 ******************************************/
-pagination.addEventListener("click", function (event) {
-  if (event.target.tagName == "A") {
-    pageNum = event.target.text;
-    paginationBox.forEach(pgLink => pgLink.removeAttribute('class'));
-    event.target.classList.add('active');
-    
-    if (results.length == 0) {
-      showStudents(studentList, pageNum);
-    }else{
-      showStudents(results, pageNum);
-    } 
-    
-  }
-  
-});
+
   
