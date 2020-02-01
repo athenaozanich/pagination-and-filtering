@@ -19,6 +19,7 @@ let pagination =  document.createElement("UL");
 // Create a function to hide all of the items in the list excpet for the ten you want to show
 // Tip: Keep in mind that with a list of 54 studetns, the last page will only display four
 (function () {
+
   //create search container and it's children
 const pgHeader = document.querySelector('.page-header');
 pgHeader.appendChild(document.createRange()
@@ -31,7 +32,7 @@ pgHeader.appendChild(document.createRange()
   
   let srch = document.querySelector('.student-search');
   srch.addEventListener("keyup", function(e) {
-    
+
     const studentNames = document.querySelectorAll('.student-details h3');
     let studentList = document.querySelector('.student-list');
     let searchStr = e.target.value.toString().toLowerCase();
@@ -42,20 +43,26 @@ pgHeader.appendChild(document.createRange()
       let studentName = studentNames[i].innerHTML.toLowerCase();
       
       if (studentName.indexOf(searchStr) > -1) {
+        if (document.querySelector('.no-results')) {
+          studentList.removeChild(document.querySelector('.no-results'));
+        }
         results.push(studentsArr[i]);
+
       } 
     }
-
     if (results.length == 0) {
-      studentList.appendChild(document.createRange()
-     .createContextualFragment(
-       `<li class="student-item cf">
-        <div class="student-details">
-            <h3>Sorry no results found!</h3>
-        </div>
-       </li>`
-      ));
+      if (!document.querySelector('.no-results')) {
+        studentList.appendChild(document.createRange()
+       .createContextualFragment(
+         `<li class="student-item cf no-results">
+          <div class="student-details">
+              <h3>Sorry no results found!</h3>
+          </div>
+         </li>`
+        ));
+      }
     }
+    
 
     paginationLinks(results, 1);
     showStudents(results, 1);
