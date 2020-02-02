@@ -61,7 +61,7 @@ body{
     cursor: pointer;
   }
   .student-list:hover .student-item:not(:hover) {
-    filter: blur(1px);
+    filter: opacity(50%);
   }
     .student-details{
       width: 50%;
